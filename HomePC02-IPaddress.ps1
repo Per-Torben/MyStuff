@@ -3,9 +3,7 @@
 # 
 # Version: 1.0
 #*********************************************************************************************
-#
 # Input values below
-#
 #
 $nic = "vEthernet (External Virtual Switch)"
 #*********************************************************************************************
@@ -15,8 +13,9 @@ $nic = "vEthernet (External Virtual Switch)"
 $ipcfg = Get-NetIPConfiguration -InterfaceAlias $nic
 $runscript = $true # Failsafe for accidental running
 #*********************************************************************************************
-if ($runscript -eq $true)
-{
+if ($runscript -eq $false)
+{Write-Host -ForegroundColor Red "Do NOT run this script non-interactively! Run from editor" 
+return}
 if ($ipcfg.IPv4Address.ipaddress -ne "172.17.2.12") 
     {
     $IPisOK = $true
@@ -46,5 +45,3 @@ ELSE
     Write-Host -ForegroundColor Green -BackgroundColor Black "VPN is connected to Azure. All is good"
     }
 pause
-}
- 
