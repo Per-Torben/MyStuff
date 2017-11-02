@@ -5,7 +5,7 @@
 #*********************************************************************************************
 # Input values below
 #
-$nic = "vEthernet (External Virtual Switch)"
+$nic = "Ethernet"
 #*********************************************************************************************
 #
 # Variables below
@@ -16,7 +16,7 @@ $runscript = $true # Failsafe for accidental running
 if ($runscript -eq $false)
 {Write-Host -ForegroundColor Red "Do NOT run this script non-interactively! Run from editor" 
 return}
-if ($ipcfg.IPv4Address.ipaddress -ne "172.17.2.12") 
+if ($ipcfg.IPv4Address.ipaddress -ne "172.17.2.12")
     {
     $IPisOK = $true
     }
