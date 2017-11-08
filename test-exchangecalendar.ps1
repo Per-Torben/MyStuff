@@ -31,5 +31,5 @@ foreach ($mb in $mbx){
     }
 }
 Write-host "The following users have different default calendar permissions:"
-$export
+$export | ft
 Remove-PSSession $ExchSession
