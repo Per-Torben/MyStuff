@@ -24,7 +24,7 @@ ELSE
     {
     $IPisOK = $false
     }    
-$VPNisOK = (Test-NetConnection homedc06).pingsucceeded
+$VPNisOK = (Test-NetConnection homedc07).pingsucceeded
 IF ($IPisOK = $false)    
     {
     Write-Host -ForegroundColor Red -BackgroundColor Black "IP is $($ipcfg.IPv4Address.ipaddress). Changing this"
