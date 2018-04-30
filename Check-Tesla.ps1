@@ -10,7 +10,7 @@ $teslapwdfile = "teslapwd.txt"
 <#*********************************************************************************************
  Variables below
 #>
-$securefile = ".\$($teslapwdfile)" # Encrypted passwordfile for the user
+$securefile = $env:userprofile+"\documents\$($teslapwdfile)" # Encrypted passwordfile for the user
 IF ((test-path $securefile) -eq $false) {
     read-host -assecurestring -Prompt "Log on as $($username)"| convertfrom-securestring | out-file $securefile # Set securestring with password - only need to run interactively once
 }
@@ -25,3 +25,39 @@ if ($runscript -eq $false) {
 }
 #*********************************************************************************************
 Import-Module tesla
+
+$token = Get-TeslaToken -Credential $teslacred
+
+$vehicle = Get-TeslaVehicle -Token $token
+
+
+
+
+($token.access_token).GetType()
+$crypttoken = $token.access_token 
+$crypttoken
+
+$tokencred = new-object -typename System.Management.Automation.PSCredential -argumentlist $crypttoken
+
+([DateTimeOffset](Get-Date)).ToUnixTimeSeconds()
+$token.created_at
+$origin = New-Object -Type DateTime -ArgumentList 1970, 1, 1, 0, 0, 0, 0
+$whatIWant = $origin.AddSeconds($token.created_at)
+$expire = $whatIWant.AddSeconds($token.expires_in)
+IF ((Get-Date) -gt $expire) {
+    $true
+}
+
+<#
+1. Securestring av token
+2. Konvertere dato/tidspunkt - gyldig for hvor lenge?
+3. Lagre kryptert token og gyldig tid
+4. Github med 2 faktor
+#>
+
+<#
+$teslatoken = [PsCustomObject]@{
+    $accesstoken = ($token.access_token | ConvertTo-SecureString)
+    $expire = $token.expires_in
+}
+#>
