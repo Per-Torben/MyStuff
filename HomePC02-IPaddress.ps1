@@ -5,7 +5,7 @@
 #*********************************************************************************************
 # Input values below
 #
-$nic = "Ethernet"
+$nic = "vEthernet (External Virtual Switch)"
 #*********************************************************************************************
 #
 # Variables below
@@ -29,7 +29,7 @@ IF ($IPisOK = $false)
     {
     Write-Host -ForegroundColor Red -BackgroundColor Black "IP is $($ipcfg.IPv4Address.ipaddress). Changing this"
     New-NetIPAddress -InterfaceAlias $nic -IPAddress "172.17.2.12" -PrefixLength 25 -DefaultGateway "172.17.2.126" 
-    Set-DnsClientServerAddress -InterfaceAlias $nic -ServerAddresses 172.17.2.5, 172.17.1.4
+    Set-DnsClientServerAddress -InterfaceAlias $nic -ServerAddresses 172.17.2.5, 172.17.1.5
     Ipconfig /registerdns
     }
 ELSE

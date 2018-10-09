@@ -27,12 +27,27 @@ if ($runscript -eq $false) {
 Import-Module tesla
 
 $token = Get-TeslaToken -Credential $teslacred
-
 $vehicle = Get-TeslaVehicle -Token $token
 
+$export = @()
+while ($true) {
+    $time = (Get-Date -UFormat %Y.%m.%d_%H.%M.%S)
+    $range = Get-TeslaVehicleChargeState -Vehicle $vehicle -Token $token
+    $percentage = $range.battery_level
+    $typical = $range.ideal_battery_range
+    $output = [PsCustomObject]@{
+        Time               = $time
+        Percent            = $percentage
+        Typical            = ($typical*1.6)
+        }
+    $output
+    $export += $output
+    write-host "Sleeping 2 hours..."
+    sleep 7200
+}
+$export |select Time, Percent, Typical|Export-Csv "C:\Users\per-torben\OneDrive\Privat\Tesla\Drain2.csv" -Encoding UTF8 -Delimiter ";" -Append -NoTypeInformation
 
-
-
+<#
 ($token.access_token).GetType()
 $crypttoken = $token.access_token 
 $crypttoken
@@ -48,7 +63,7 @@ IF ((Get-Date) -gt $expire) {
     $true
 }
 
-<#
+
 1. Securestring av token
 2. Konvertere dato/tidspunkt - gyldig for hvor lenge?
 3. Lagre kryptert token og gyldig tid
