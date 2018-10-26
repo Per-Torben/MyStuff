@@ -5,7 +5,6 @@ Written by Per-Torben Sørensen (per-torben.sorensen@advania.no)
 Input values below
 #>
 $username = "per-torben@sorensen.ws"
-$tokenfile = "teslatoken.json"
 $teslapwdfile = "teslapwd.txt"
 <#*********************************************************************************************
  Variables below
@@ -28,7 +27,6 @@ Import-Module tesla
 
 $token = Get-TeslaToken -Credential $teslacred
 $vehicle = Get-TeslaVehicle -Token $token
-
 $export = @()
 while ($true) {
     $time = (Get-Date -UFormat %Y.%m.%d_%H.%M.%S)
