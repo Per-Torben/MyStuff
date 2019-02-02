@@ -31,19 +31,28 @@ $export = @()
 while ($true) {
     $time = (Get-Date -UFormat %Y.%m.%d_%H.%M.%S)
     $range = Get-TeslaVehicleChargeState -Vehicle $vehicle -Token $token
-    $percentage = $range.battery_level
-    $typical = $range.ideal_battery_range
+    $car = Get-TeslaVehicleDriveState -Vehicle $vehicle -Token $token
+    $climate = Get-TeslaVehicleClimateState -Token $token -Vehicle $vehicle
     $output = [PsCustomObject]@{
         Time               = $time
-        Percent            = $percentage
-        Typical            = ($typical*1.6)
+        Percent            = $range.battery_level
+        Typical            = ($range.ideal_battery_range*1.6)
+        Estimated          = ($range.est_battery_range*1.6)
+        BatteryRange       = ($range.battery_range*1.6)
+        Gear               = $car.shift_state
+        Speed              = ($car.speed*1.6)
+        Power              = $range.charger_power
+        Rate               = $range.charge_rate
+        CliBatteryheater   = $climate.battery_heater
+        Batteryheater      = $range.battery_heater_on
+        CannotHeat         = $range.not_enough_power_to_heat
         }
     $output
     $export += $output
-    write-host "Sleeping 2 hours..."
-    sleep 7200
+    #write-host "Sleeping 2 hours..."
+    sleep 30
 }
-$export |select Time, Percent, Typical|Export-Csv "C:\Users\per-torben\OneDrive\Privat\Tesla\Drain2.csv" -Encoding UTF8 -Delimiter ";" -Append -NoTypeInformation
+$export |select Time, Percent, Typical, Estimated, BatteryRange, Gear, Speed, Power, Rate, Batteryheater, CannotHeat | ft |Export-Csv "C:\Users\per-torben\OneDrive\Privat\Tesla\Charge-range-$($time).csv" -Encoding UTF8 -Delimiter ";" -Append -NoTypeInformation
 
 <#
 ($token.access_token).GetType()
